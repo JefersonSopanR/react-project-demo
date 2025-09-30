@@ -5,6 +5,7 @@ import { AuthProvider, AuthContext } from './context/AuthContext'
 import Profile from './Components/Profile'
 import Timer from './Components/Timer'
 import Settings from './Components/Settings'
+import { TimerContextProvider } from './context/TimerContext'
 import './App.css'
 
 const ProtectedComponents = ({children}) => {
@@ -56,7 +57,9 @@ const MainComponent = () => {
 			<Route path='login' element={<Login/>}/>
 			<Route path='/index/*' element={
 				<ProtectedComponents>
-					<Components/>
+					<TimerContextProvider>
+						<Components/>
+					</TimerContextProvider>
 				</ProtectedComponents>
 
 			}/>
