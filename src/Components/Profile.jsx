@@ -7,7 +7,8 @@ const {username, len, language} = useContext(AuthContext)
 let grettings = '';
 
 if (language === 'es') grettings = `Hola ${username}!`
-else if (language === 'en') grettings = `Hi ${username}!` 
+else if (language === 'en') grettings = `Hi ${username}!`
+else if (language === 'jp') grettings = `やあ ${username}!`
 else if (language === 'fr') grettings = `Bonjour ${username}!`;
 else if (language === 'pt') grettings = `Olá ${username}!`;
 else if (language === 'ar') grettings = `مرحبا ${username}!`;

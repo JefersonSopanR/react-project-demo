@@ -5,6 +5,7 @@ import { AuthProvider, AuthContext } from './context/AuthContext'
 import Profile from './Components/Profile'
 import Timer from './Components/Timer'
 import Settings from './Components/Settings'
+import Wordle from './Components/Wordle'
 import { TimerContextProvider } from './context/TimerContext'
 import './App.css'
 
@@ -38,6 +39,7 @@ const Components = () => {
 				<button onClick={() => {navigate('/index')}} style={{background: 'lightblue'}}>{len[language].Profile}</button>
 				<button onClick={() => {navigate('/index/timer')}} style={{background: 'lightblue'}}>{len[language].Timer}</button>
 				<button onClick={() => {navigate('/index/settings')}} style={{background: 'lightblue'}}>{len[language].Settings}</button>
+				<button onClick={() => {navigate('/index/wordle')}} style={{background: 'lightblue'}}>{len[language].Wordle}</button>
 				<button onClick={() => {Logout()}} style={{background: 'red', color: 'black'}}>{len[language].Logout}</button>
 
 			</nav>
@@ -45,6 +47,7 @@ const Components = () => {
 				<Route index element={<Profile/>}/>
 				<Route path='timer' element={<Timer/>} />
 				<Route path='settings' element={<Settings/>} />
+				<Route path='wordle' element={<Wordle/>} />
 			</Routes>
 		</>
 	)

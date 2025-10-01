@@ -12,6 +12,7 @@ export function AuthProvider({children}) {
 			Profile: 'Profile',
 			Timer: 'Timer',
 			Settings: 'Settings',
+			Wordle: 'Wordle',
 			Logout: 'Logout',
 
 			//Profile:
@@ -36,6 +37,7 @@ export function AuthProvider({children}) {
 			Profile: 'Perfil',
 			Timer: 'Temporizador',
 			Settings: 'Ajustes',
+			Wordle: 'Wordle',
 			Logout: 'Salir',
 
 			//Profile:
@@ -59,6 +61,7 @@ export function AuthProvider({children}) {
 			Profile: 'プロフィール',
 			Timer: 'タイマー',
 			Settings: '設定',
+			Wordle: 'ワードル',
 			Logout: 'ログアウト',
 
 			//Profile:
@@ -83,6 +86,7 @@ export function AuthProvider({children}) {
 			Profile: 'Profil',
 			Timer: 'Minuteur',
 			Settings: 'Paramètres',
+			Wordle: 'Wordle',
 			Logout: 'Déconnexion',
 
 			//Profile:
@@ -108,6 +112,7 @@ export function AuthProvider({children}) {
 			Profile: 'Perfil',
 			Timer: 'Temporizador',
 			Settings: 'Configurações',
+			Wordle: 'Wordle',
 			Logout: 'Sair',
 
 			//Profile:
@@ -133,6 +138,7 @@ export function AuthProvider({children}) {
 			Profile: 'ملف التعريف',
 			Timer: 'المؤقت',
 			Settings: 'الإعدادات',
+			Wordle: 'ووردل',
 			Logout: 'تسجيل الخروج',
 
 			//Profile:

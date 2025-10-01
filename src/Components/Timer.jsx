@@ -80,7 +80,7 @@ const SortLogs = ({logs, setLogs}) => {
 	}
 
 const Timer = () => {
-	const {button, setButton, start, setStart, time, setTime, interval, timeRef, seconds, minutes, logs, setLogs} = useContext(TimerContext);
+	const {button, setButton, start, setStart, time, setTime, timeRef, seconds, minutes, logs, setLogs} = useContext(TimerContext);
 	const {len, language} = useContext(AuthContext)
 
 	const clearTime = () => {
