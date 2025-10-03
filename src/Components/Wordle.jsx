@@ -33,7 +33,8 @@ const Game = ({focusCell, setFousCell, currentGuess, guesses}) => {
 		{
 			rows.flat().map((row, index) => (
 			<div key={index} onClick={() => handleFocus(index)} onFocus={() => handleFocus(index)}
-			style={{width: '60px', height: '60px', border: focusCell === index ? '2px solid #E3E0FF' : '2px #ccc' ,background: '#EEF2F2'}}>
+			style={{width: '60px', height: '60px', border: focusCell === index ? '2px solid #E3E0FF' : '2px #ccc' ,
+			background: '#EEF2F2', backgroundColor: row.color === 'green' ? 'green' : row.color === 'yellow' ? 'yellow' : row.color ? 'gray' : '#EEF2F2'}}>
 			{row.letter}</div>))
 		}
 		</div>
@@ -44,8 +45,16 @@ const Wordle = () => {
 	const [focusCell, setFousCell] = useState(null);
 	const [currentGuess, setCurrentGuess] = useState('');
 	const [guesses, setGuesses] = useState([])
+	const [win, setWin] = useState(false);
+	const [lose, setLose] = useState(false)
+	const [answer, setAnswer] = useState('');
 
 	useEffect(() => {
+		setAnswer(WORDS[Math.floor(Math.random() * WORDS.length)])
+	}, [])
+
+	useEffect(() => {
+		if (win || lose) return 
 	function handleKey(e) {
 		const key = e.key.toUpperCase();
 		if ((key.length === 1 && /[A-Z]/.test(key))) {
@@ -95,6 +104,8 @@ const Wordle = () => {
 			const convertGuesse = convertGuess(currentGuess);
 			setGuesses([...guesses, convertGuesse]);
 			setCurrentGuess('');
+			if (currentGuess === answer) setWin(true);
+			else if (guesses.length > 5) setLose(true);
 			setFousCell(focusCell => ((Math.floor(focusCell/5) + 1) * 5))
 		}
 	}
@@ -105,17 +116,38 @@ const Wordle = () => {
 
 	const convertGuess = (currentGuess) => {
 		const splitGuess = currentGuess.split('');
+		const splitAnswer = answer.split('');
 		const result = [];
 
 		for (let i = 0; i < splitGuess.length; i++) {
-			result[i] = {letter: splitGuess[i], color: ''}
+			if (splitGuess[i] === splitAnswer[i]){
+				result[i] = {letter: splitAnswer[i], color: 'green'};
+				splitAnswer[i] = null;
+			}
 		}
+		for (let i = 0; i < splitGuess.length; i++) {
+			if (result[i]) continue;
+			if (splitAnswer.includes(splitGuess[i])) {
+				result[i] = {letter: splitGuess[i], color: 'yellow'};
+				const index = splitAnswer.indexOf(splitGuess[i]);
+				splitAnswer[index] = null;
+			}
+		}
+		for (let i = 0; i < 5; i++) {
+			if (!result[i]) {
+				result[i] = {letter: splitGuess[i], color: 'gray'};
+			}
+		}
+
+
 		return result
 	}
 
 	return (
 		<div style={{padding: '10px'}}>
 			<Game focusCell={focusCell} setFousCell={setFousCell} currentGuess={currentGuess} guesses={guesses}/>
+			{win && <p>YOU WON! CONGRATULATION! the word was</p>}
+			{lose && <p>YOU LOSE! the word was </p>}
 		</div>
 	)
 }
