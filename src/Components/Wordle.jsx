@@ -3,137 +3,119 @@ import { useContext, useState, useEffect, useRef } from "react"
 
 const WORDS = ["BUENO", "PILAR", "POCOS"];
 
-const Game = ({currentGuess, setCurrentGuess, focusedCell, setFocusedCell}) => {
+const Game = ({focusCell, setFousCell, currentGuess, guesses}) => {
 
-	const emptyRow = Array(5).fill({letter: '', color: ''});
-	const rows = [];
+	const emptyRows = Array(5).fill({letter: '', color: ''});
+	const rows = guesses.slice();
 
-	// Add current guess row
 	if (rows.length < 6) {
-		const guessWord = currentGuess.padEnd(5).split('').map(letter => ({letter: letter.trim(), color: ''}))
-		rows.push(guessWord);
+		const wordGuess = currentGuess.padEnd(5).split('').map(letter => ({letter: letter, color: ''}));
+		rows.push(wordGuess);
 	}
 
-	// Fill remaining rows
 	while (rows.length < 6)
-		rows.push(emptyRow)
+		rows.push(emptyRows)
 
-	const handleCellFocus = (cellIndex) => {
-		// Only allow focusing on current guess row (first row)
-		const rowIndex = Math.floor(cellIndex / 5);
-		if (rowIndex === 0) {  // Only current guess row is focusable
-			setFocusedCell(cellIndex);
+	const handleFocus = (index) => {
+		const row = Math.floor(focusCell/5);
+		const bottom = row * 5;
+		const top = (row * 5) + 5;
+		if (index < bottom || index > top)
+		{
+			console.log("returning from if handle FOCUS")
+			return;
 		}
-	};
+		setFousCell(index);
+	}
 
 	return (
 		<div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 60px)', gap: '5px',justifyContent: 'center'}}>
-			{
-				rows.flat().map((row, index) => (
-					<div 
-						key={index} 
-						tabIndex={Math.floor(index / 5) === 0 ? 0 : -1}  // Only current row is focusable
-						onClick={() => handleCellFocus(index)}
-						style={{
-							width: '60px', 
-							height: '60px', 
-							border: focusedCell === index ? '2px solid blue' : '2px solid #ccc', 
-							backgroundColor: focusedCell === index ? '#e3f2fd' : 'white',
-							justifyContent: 'center', 
-							display: 'flex', 
-							alignItems: 'center',
-							outline: 'none',
-							cursor: Math.floor(index / 5) === 0 ? 'pointer' : 'default'
-						}}
-						onFocus={() => handleCellFocus(index)}
-					>
-						{row.letter}
-					</div>
-				))
-			}
+		{
+			rows.flat().map((row, index) => (
+			<div key={index} onClick={() => handleFocus(index)} onFocus={() => handleFocus(index)}
+			style={{width: '60px', height: '60px', border: focusCell === index ? '2px solid #E3E0FF' : '2px #ccc' ,background: '#EEF2F2'}}>
+			{row.letter}</div>))
+		}
 		</div>
 	)
 }
 
 const Wordle = () => {
-
+	const [focusCell, setFousCell] = useState(null);
 	const [currentGuess, setCurrentGuess] = useState('');
-	const [focusedCell, setFocusedCell] = useState(null);
+	const [guesses, setGuesses] = useState([])
 
 	useEffect(() => {
-
-		function handleKey(e) {
-			const key = e.key.toUpperCase();
-			
-			if (key.length === 1 && /[A-Z]/.test(key)) {
-				if (focusedCell !== null) {
-					// Focused cell input - update specific position
-					const cellPosition = focusedCell % 5;  // Get column (0-4)
-					const newGuess = currentGuess.padEnd(5).split('');
-					newGuess[cellPosition] = key;
-					let joinGuess = '';
-
-					for (let i = 0; i < newGuess.length; i++) {
-						if (newGuess[i] != ' ') joinGuess += newGuess[i];
-						else joinGuess += ' '
-					}
-					setCurrentGuess(joinGuess);
-					// Move to next cell if not at end
-					if (cellPosition < 4) {
-						setFocusedCell(focusedCell + 1);
-					}
-				} else {
-					console.log("Else")
-					// Normal sequential input
-					if (currentGuess.length < 5) {
-						setCurrentGuess(currentGuess + key);
-					}
+	function handleKey(e) {
+		const key = e.key.toUpperCase();
+		if ((key.length === 1 && /[A-Z]/.test(key))) {
+			if (focusCell !== null) {
+				const index = focusCell % 5;
+				const splitGuess = currentGuess.padEnd(5).split('');
+				splitGuess[index] = key;
+				let joinGuess = '';
+				for (let i = 0; i < splitGuess.length; i++) {
+					if (splitGuess[i] !== ' ') joinGuess += splitGuess[i];
+					else joinGuess += ' ';
+				}
+				setCurrentGuess(joinGuess);
+				const focusPosLim = (Math.floor(focusCell/5) * 5) + 4
+				if (focusCell < focusPosLim) {
+					setFousCell(focusCell + 1);
 				}
 			}
-			else if (e.key === 'Backspace') {
-				if (focusedCell !== null) {
-					// Focused cell backspace - clear specific position
-					const cellPosition = focusedCell % 5;
-					const newGuess = currentGuess.padEnd(5).split('');
-					newGuess[cellPosition] = '';
-					let joinGuess = '';
-					for (let i = 0; i < newGuess.length; i++) {
-						if (newGuess[i] != '') joinGuess += newGuess[i];
-						else joinGuess += ' ';
-					}
-
-					setCurrentGuess(joinGuess);
-					
-					// Move to previous cell if not at start
-					if (cellPosition > 0) {
-						setFocusedCell(focusedCell - 1);
-					}
-				} else {
-					// Normal backspace
-					if (currentGuess.length > 0)
-						setCurrentGuess(currentGuess.slice(0, -1));
+			else {
+				if (currentGuess.length < 5) {
+					setCurrentGuess(currentGuess + key);
 				}
 			}
-			else if (e.key === 'Escape') {
-				// Clear focus to return to normal input mode
-				setFocusedCell(null);
+		} else if (e.key === 'Backspace' && currentGuess.length > 0) {
+			if (focusCell !== null) {
+				const index = focusCell % 5;
+				const splitGuess = currentGuess.padEnd(5).split('');
+				splitGuess[index] = ' '
+				let joinGuess = '';
+				for (let i = 0; i < splitGuess.length; i++) {
+					if (splitGuess[i] !== ' ') joinGuess += splitGuess[i];
+					else joinGuess += ' '
+				}
+				setCurrentGuess(joinGuess);
+				const focusBottom = (Math.floor(focusCell/5) * 5);
+				const focusTop = (Math.floor(focusCell/5) * 5) + 5;
+				console.log("focusBottom -> ", focusBottom);
+				console.log("focusTop -> ", focusTop)
+				if (focusCell > focusBottom && focusCell < focusTop) {
+					setFousCell(focusCell - 1);
+				}
+			} else {
+				setCurrentGuess(currentGuess.slice(0, -1));
 			}
+		} else if (e.key === 'Enter' && currentGuess.length === 5 && guesses.length < 6) {
+			if (currentGuess.includes(' ')) return;
+			const convertGuesse = convertGuess(currentGuess);
+			setGuesses([...guesses, convertGuesse]);
+			setCurrentGuess('');
+			setFousCell(focusCell => ((Math.floor(focusCell/5) + 1) * 5))
 		}
+	}
 
-		window.addEventListener('keydown', handleKey);
-		return () => window.removeEventListener('keydown', handleKey);
-	}, [currentGuess, focusedCell]);
+	window.addEventListener('keydown', handleKey)
+	return () => window.removeEventListener('keydown', handleKey) 
+	}, [currentGuess, focusCell]) 
+
+	const convertGuess = (currentGuess) => {
+		const splitGuess = currentGuess.split('');
+		const result = [];
+
+		for (let i = 0; i < splitGuess.length; i++) {
+			result[i] = {letter: splitGuess[i], color: ''}
+		}
+		return result
+	}
 
 	return (
-		<div>
-			<Game 
-				currentGuess={currentGuess} 
-				setCurrentGuess={setCurrentGuess}
-				focusedCell={focusedCell}
-				setFocusedCell={setFocusedCell}
-			/>
-			<p>Mode: {focusedCell !== null ? `Focused on cell ${focusedCell % 5 + 1}` : 'Sequential typing'}</p>
-			<p>Press Escape to exit focused mode</p>
+		<div style={{padding: '10px'}}>
+			<Game focusCell={focusCell} setFousCell={setFousCell} currentGuess={currentGuess} guesses={guesses}/>
 		</div>
 	)
 }
