@@ -6,7 +6,7 @@ const WORDS = [
   // ... (full list truncated; add the rest from the Gist)
 ];
 
-const Game = ({guesses, focusCell, setFocusCell, currentGuess, win, lose}) => {
+const Game = ({guesses, focusCell, setFocusCell, currentGuess, win}) => {
   const empty = Array(5).fill({letter: '', color: ''});
   const rows = guesses.slice();
 
@@ -28,19 +28,65 @@ const Game = ({guesses, focusCell, setFocusCell, currentGuess, win, lose}) => {
   }
 
   return (
-    <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 60px)', justifyContent: 'center', gap: '5px'}}>
-      { rows.flat().map((row, index) => (<div onClick={() => updateFocusCell(index)} key={index} style={{width: '60px', height: '60px', 
-      backgroundColor: row.color === 'green' ? 'green' : row.color === 'yellow' ? 'yellow' : row.color ? 'gray' : 'white', border: focusCell === index ? '2px solid blue' : '2px solid gray'}}>{row.letter}</div>))
-
-      }
+    <div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(5, 60px)',
+    justifyContent: 'center',
+    gap: '8px',
+  }}
+>
+  {rows.flat().map((row, index) => (
+    <div
+      key={index}
+      onClick={() => updateFocusCell(index)}
+      style={{
+        width: '60px',
+        height: '60px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        color:
+          row.color === 'yellow'
+            ? '#333'
+            : row.color
+            ? 'white'
+            : '#222',
+        backgroundColor:
+          row.color === 'green'
+            ? '#22c55e' // nice green
+            : row.color === 'yellow'
+            ? '#facc15' // nice yellow
+            : row.color
+            ? '#9ca3af' // gray
+            : '#f9fafb', // light white/gray background
+        border:
+          focusCell === index
+            ? '2px solid #3b82f6' // blue border for focus
+            : '2px solid #d1d5db', // soft gray border
+        borderRadius: '8px',
+        boxShadow:
+          focusCell === index
+            ? '0 0 8px rgba(59,130,246,0.4)'
+            : '0 1px 3px rgba(0,0,0,0.1)',
+        transition: 'all 0.15s ease',
+        cursor: 'pointer',
+      }}
+    >
+      {row.letter}
     </div>
+  ))}
+</div>
+
   )
 }
 
 const Wordle = () => {
   const [focusCell, setFocusCell] = useState(0);
   const {guesses, setGuesses, currentGuess, setCurrentGuess, answer, setAnswer, win, setWin, lose, setLose} = useContext(WordleContext);
-  const [optionGame, setOptionGame] = useState('');
   
   useEffect(() => {
     setAnswer(WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase());
@@ -136,43 +182,6 @@ const Wordle = () => {
   return (
   <div className="flex justify-center px-4">
     <div className="w-full max-w-2xl bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-8 text-center">
-      
-      {/* Game Mode Buttons */}
-      <div className="flex justify-center gap-3 mb-6">
-        <button
-          onClick={() => setOptionGame("wordleTimer")}
-          className={`px-5 py-2 rounded-full shadow-sm font-medium transition ${
-            optionGame === "wordleTimer"
-              ? "bg-indigo-600 text-white"
-              : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-          }`}
-        >
-          Wordle with Timer
-        </button>
-        <button
-          onClick={() => setOptionGame("wordleStandar")}
-          className={`px-5 py-2 rounded-full shadow-sm font-medium transition ${
-            optionGame === "wordleStandar"
-              ? "bg-indigo-600 text-white"
-              : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-          }`}
-        >
-          Wordle Standard
-        </button>
-        <button
-          onClick={() => setOptionGame("wordleLevels")}
-          className={`px-5 py-2 rounded-full shadow-sm font-medium transition ${
-            optionGame === "wordleLevels"
-              ? "bg-indigo-600 text-white"
-              : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-          }`}
-        >
-          Wordle Levels
-        </button>
-      </div>
-
-      {/* Game Board */}
-      {optionGame === "wordleStandar" && (
         <div className="mb-6">
           <Game
             guesses={guesses}
@@ -180,10 +189,8 @@ const Wordle = () => {
             setFocusCell={setFocusCell}
             currentGuess={currentGuess}
             win={win}
-            lose={lose}
           />
         </div>
-      )}
 
       {/* Results */}
       {win && (
