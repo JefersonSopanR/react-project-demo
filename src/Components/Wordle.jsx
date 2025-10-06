@@ -135,7 +135,7 @@ const Wordle = () => {
         setCurrentGuess('');
         setFocusCell(guesses.length * 5 + 5);
         if (currentGuess === answer) {setWin(true); setFocusCell(null)}
-        else if (guesses.length >= 4) setLose(true);
+        else if (guesses.length >= 4) {setLose(true)};
       } else if (e.key === 'ArrowLeft') {
         const rowBounderBottom = guesses.length * 5;
           if (focusCell > rowBounderBottom)
@@ -179,9 +179,18 @@ const Wordle = () => {
     return result;
   }
 
+  const restartGame = () => {
+    setGuesses([]);
+    setCurrentGuess('');
+    setWin(false);
+    setLose(false);
+    setFocusCell(0);
+    setAnswer(WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase());
+  }
+
   return (
   <div className="flex justify-center px-4">
-    <div className="w-full max-w-2xl bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-8 text-center">
+    <div className="w-full max-w-4xl bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-8 text-center">
         <div className="mb-6">
           <Game
             guesses={guesses}
@@ -205,6 +214,7 @@ const Wordle = () => {
           <span className="font-bold uppercase">{answer}</span>
         </p>
       )}
+      {(win || lose) && <button onClick={() => restartGame()}>restart</button>}
     </div>
   </div>
 );
