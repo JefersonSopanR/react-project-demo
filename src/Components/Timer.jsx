@@ -60,8 +60,7 @@ const SortLogs = ({logs, setLogs}) => {
     <>
       <button
         onClick={() => setSymbol(!symbol)}
-        className="mb-4 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg shadow-sm transition"
-      >
+        className="mb-4 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg shadow-sm transition">
         {symbol ? len[language].ToptoBottonTimer : len[language].BottontoTopTimer}
       </button>
 
@@ -70,8 +69,7 @@ const SortLogs = ({logs, setLogs}) => {
           {logs.map((log, index) => (
             <div
               key={log.id}
-              className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 shadow-sm"
-            >
+              className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
               <p className="text-slate-700 text-sm flex-1">
                 {index + 1}.{" "}
                 {log.showLogTheme === false ? (
@@ -92,8 +90,7 @@ const SortLogs = ({logs, setLogs}) => {
                       log.showLogTheme = false;
                       setSwitcher(!switcher);
                     }}
-                    className="text-indigo-600 font-medium hover:underline"
-                  >
+                    className="text-indigo-600 font-medium hover:underline">
                     {log.theme}
                   </button>
                 )}{" "}
@@ -101,8 +98,7 @@ const SortLogs = ({logs, setLogs}) => {
               </p>
               <button
                 onClick={() => eraseLog(log.id)}
-                className="ml-2 text-red-500 hover:text-red-700 transition"
-              >
+                className="ml-2 text-red-500 hover:text-red-700 transition">
                 🗑️
               </button>
             </div>
@@ -150,16 +146,14 @@ const Timer = () => {
             <>
               <button
                 onClick={() => setButton(!button)}
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm font-medium transition"
-              >
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm font-medium transition">
                 {button
                   ? len[language].stopTimer
                   : len[language].continueTimer}
               </button>
               <button
                 onClick={() => clearTime()}
-                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 rounded-lg shadow-sm font-medium transition"
-              >
+                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 rounded-lg shadow-sm font-medium transition">
                 {len[language].clearTimer}
               </button>
             </>
@@ -181,8 +175,7 @@ const Timer = () => {
             <div className="flex justify-between items-center mb-3">
               <button
                 onClick={() => setLogs([])}
-                className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md shadow-sm transition"
-              >
+                className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md shadow-sm transition">
                 {len[language].clearLogsTimer}
               </button>
             </div>
